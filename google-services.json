@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "520556354236",
+    "project_id": "socialboom-d4af8",
+    "storage_bucket": "socialboom-d4af8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520556354236:android:a0f03246f0bb4e15354eb9",
+        "android_client_info": {
+          "package_name": "com.sigmatech.socialboom"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxPoY671ORiZDBKRhCheHXgOAN4IC8JpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
