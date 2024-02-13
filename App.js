@@ -18,14 +18,12 @@ Notifications.setNotificationHandler({ handleNotification: async () => ({shouldS
 export default function App() {
 
     const [expoPushToken, setExpoPushToken] = useState('');
-    const [webKey, setWebKey] = useState(1);
-    
     const [mobileID, setMobileID] = useState(null);
     const [mobileIdSetted, setMobileIdSetted] = useState(false);
     const [role, setRole] = useState(3);
     const [needLoadHome, setNeedLoadHome] = useState(true);
     const [savedCookies,setSavedCookies] = useState(null);
-    const [webviewSource, setWebviewSource] = useState({ uri: 'https://account.socialboom.hu/',headers: {Cookie: savedCookies},  }); //,headers: {Cookie: savedCookies},
+    const [webviewSource, setWebviewSource] = useState({ uri: 'https://account.socialboom.hu/',headers: {Cookie: savedCookies},  });
     const [errorState, setErrorState] = useState(false);
     const webViewRef = useRef(null);
     const [menu, setMenu] = useState(   [{url: 'https://account.socialboom.hu/', icon: 'home', name: 'Áttekintés'},
@@ -166,80 +164,52 @@ export default function App() {
 
         console.log("statechange..." + webViewState.url);
         debug();
-        //if (webViewState.url.includes('account.socialboom.hu/#') || webViewState.url.includes('account.socialboom.hu/logout')){
 
-            //setSavedCookies(savedCookies.replace("SocialSession","SocialSessionOld"));
-
-        //}
-            //console.log("MEGTÖRTÉNT A LOGOUT");
-            /*
-            (async () => { try { 
-                await StorageHelper.removeItem('mobileId'); 
-                await StorageHelper.removeItem('cookies'); 
-            } catch(e) {
-                console.log("remove error")
-            } finally {
-                setSavedCookies(null);
-                setMobileID(null);
-                setRole(3);  
-                setWebviewSource({ uri: 'https://account.socialboom.hu/#', headers: '' }); setErrorState(false);
-                console.log("Logout end part");
-                debug();
-            }
-             });
-             */
-        //} else {
-            const CHECK_COOKIE = `
+        const CHECK_COOKIE = `
             ReactNativeWebView.postMessage("Cookie: " + document.cookie);
             true;
         `;
-            if (webViewRef.current) {
-                webViewRef.current.injectJavaScript(CHECK_COOKIE);
-            }
-            
-        //}
+        if (webViewRef.current) {
+            webViewRef.current.injectJavaScript(CHECK_COOKIE);
+        }
+
 
     }
 
     _onMessage = (event) => {
-            console.log("onmessage...")
-            debug();
-            var { data } = event.nativeEvent;
-            console.log("actual cookies: " + data);
-            data = data.replace("Cookie: ","");
+        console.log("onmessage...")
+        debug();
+        var { data } = event.nativeEvent;
+        console.log("actual cookies: " + data);
+        data = data.replace("Cookie: ","");
 
-            if(data.includes("SocialSession")){
-                console.log("aha, itt menteni kell");
+        if(data.includes("SocialSession")){
+            console.log("aha, itt menteni kell");
+            (async () => { 
+                try { 
+                    setSavedCookies(data);
+                    await StorageHelper.setItem('cookies',data); 
+                } catch(e) {console.log(e)} })();
+        }
+        
+        setMobileIdSetted(false);
+        
+        cookies = data.split("; ");
+
+        cookies.forEach((cookie) => {
+            values = cookie.split("=");
+            if(values[0] == "SocialSession"){
+                
+                setMobileID(values[1]);
                 (async () => { 
                     try { 
-                        setSavedCookies(data);
-                        await StorageHelper.setItem('cookies',data); 
+                        setMobileIdSetted(true);
+                        console.log("mobile ID set...");
+                        await StorageHelper.setItem('mobileId',values[1]);                               
                     } catch(e) {console.log(e)} })();
             }
-            
-            setMobileIdSetted(false);
-            
-            cookies = data.split("; ");
-
-            cookies.forEach((cookie) => {
-                values = cookie.split("=");
-                if(values[0] == "SocialSession"){
-                    
-                    setMobileID(values[1]);
-                    (async () => { 
-                        try { 
-                            setMobileIdSetted(true);
-                            console.log("mobile ID set...");
-                            await StorageHelper.setItem('mobileId',values[1]);                               
-                        } catch(e) {console.log(e)} })();
-                }
-        
-            });
-            if (mobileIdSetted == false){
-                //setMobileID(null);
-                console.log("mobile id NULL!!")
-            } 
-        //}
+    
+        });
     }
 
     _onLoadEnd = (syntheticEvent) => {
@@ -270,7 +240,6 @@ export default function App() {
                             <WebView
                                 ref={webViewRef}
                                 style={styles.webview}
-                                
                                 javaScriptEnabled={true}
                                 injectedJavaScript={runFirst}
                                 injectedJavaScriptBeforeContentLoaded={"document.cookie=" + savedCookies + ";"}
