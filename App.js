@@ -96,7 +96,8 @@ export default function App() {
     // Push kattintás kezelése
     useEffect(() => {
         if (lastNotificationResponse && lastNotificationResponse.notification.request.content.data.url && lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER) {
-            setWebviewSource({ uri: lastNotificationResponse.notification.request.content.data.url,  }); setErrorState(false);
+            console.log("PUSH MEGVAN...");
+            setWebviewSource({ uri: lastNotificationResponse.notification.request.content.data.url,headers: {Cookie: savedCookies},  }); setErrorState(false);
         }
       }, [lastNotificationResponse]);
 
