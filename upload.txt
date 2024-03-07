@@ -1,0 +1,1 @@
+xcrun altool --upload-app --type ios --file "" --username "info@sigmatech.hu" --password "zknl-qpsu-gyrc-mrrt"

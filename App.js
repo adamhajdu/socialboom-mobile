@@ -5,6 +5,7 @@ import { BackHandler } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { Camera } from 'expo-camera';
 
 import Colors from './constants/colors';
 import StorageHelper from './helper/StorageHelper';
@@ -32,9 +33,14 @@ export default function App() {
 
     const lastNotificationResponse = Notifications.useLastNotificationResponse();
 
+    const permissionFunction = async () => {
+        Camera.requestCameraPermissionsAsync();
+    }
+
     // ########## -------- RUN ONCE -------- ##########
 
     useEffect(() => {
+        permissionFunction();
         // Push token beállítás
         PushHelper.registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 

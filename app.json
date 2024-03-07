@@ -2,7 +2,7 @@
   "expo": {
     "name": "socialboom",
     "slug": "socialboom",
-    "version": "1.0.0",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sigmatech.socialboom"
     },
     "android": {
       "adaptiveIcon": {
@@ -33,6 +34,14 @@
         "projectId": "f12a3e39-6087-46f8-a628-a6fc6fd4f2b5"
       }
     },
-    "owner": "sigmatech"
+    "owner": "sigmatech",
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Socialboom to access your camera to take profile picture"
+        }
+      ]
+    ]
   }
 }
